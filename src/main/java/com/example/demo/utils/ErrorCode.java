@@ -14,7 +14,8 @@ public enum ErrorCode {
     OK(0,"success"),
     PASSWORD_ERROR(1001,"Password Error"),
     MD5_ERROR(1002,"MD5 Error"),
-    LOGIN_ERROR(1003,"Login Error");
+    LOGIN_ERROR(1003,"Login Error"),
+    IMAGE_URL_ERROR(1004,"Image Url Error");
     private int code;
     private String msg;
 }

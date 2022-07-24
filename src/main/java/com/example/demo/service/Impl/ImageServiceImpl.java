@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -26,10 +27,12 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
     @Override
     public APIResponse uploadImage(MultipartFile img, HttpSession session) {
         //获得文件名
+/*
         String userId =(String) session.getAttribute("userId");
         if(userId.isEmpty()) {
-            return APIResponse.error(ErrorCode.LOGIN_ERROR)
+            return APIResponse.error(ErrorCode.LOGIN_ERROR);
         }
+*/
         Random random = new Random();
         String imgName = img.getOriginalFilename();
         String suffixName = imgName.substring(imgName.lastIndexOf("."));
@@ -45,10 +48,25 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
             else {
                 img.transferTo(new File(path));
             }
-            this.save(new Image(null,path,userId,hashcode));
+            this.save(new Image(null,path,null,hashcode));
         } catch (IOException e) {
             return APIResponse.error(ErrorCode.MD5_ERROR);
         }
         return APIResponse.success(path);
     }
+
+    @Override
+    public APIResponse getImageByImageUploaderId(HttpSession session) {
+        String userId = (String)session.getAttribute("userId");
+        if(userId.isEmpty()) {
+            return APIResponse.error(ErrorCode.LOGIN_ERROR);
+        }
+        List<Image> imageList = imageMapper.selectByImageUploaderId(userId);
+        List<String> urlList = new ArrayList<>();
+        for(Image image : imageList) {
+            urlList.add(image.getImageUrl());
+        }
+        return APIResponse.success(urlList);
+    }
+
 }

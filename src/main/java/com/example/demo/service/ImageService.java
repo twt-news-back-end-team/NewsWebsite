@@ -8,5 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpSession;
 
 public interface ImageService extends IService<Image> {
-    public APIResponse uploadImage(MultipartFile img, HttpSession session);
+    APIResponse uploadImage(MultipartFile img, HttpSession session);
+    APIResponse getImageByImageUploaderId(HttpSession session);
 }
