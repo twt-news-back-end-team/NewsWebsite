@@ -11,9 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -67,6 +68,52 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
             urlList.add(image.getImageUrl());
         }
         return APIResponse.success(urlList);
+    }
+
+    private void downloadImage(String url,HttpServletResponse response) throws Exception {
+        String fileName = url.substring(url.lastIndexOf('\\'));
+        response.reset();
+        response.setCharacterEncoding("UTF-8"); //字符编码
+        response.setContentType("multipart/form-data"); //二进制传输数据
+        //设置响应头
+        response.setHeader("Content-Disposition",
+                "attachment;fileName="+ URLEncoder.encode(fileName, "UTF-8"));
+
+        File file = new File(url);
+        //2、 读取文件--输入流
+        InputStream input=new FileInputStream(file);
+        //3、 写出文件--输出流
+        OutputStream out = response.getOutputStream();
+
+        byte[] buff =new byte[1024];
+        int index=0;
+        //4、执行 写出操作
+        while((index= input.read(buff))!= -1){
+            out.write(buff, 0, index);
+            out.flush();
+        }
+        out.close();
+        input.close();
+    }
+
+    @Override
+    public APIResponse downloadImageById(Integer id, HttpServletResponse response)throws Exception {
+        Image img = imageMapper.selectById(id);
+        if(img == null) {
+            return APIResponse.error(ErrorCode.IMAGE_ID_ERROR);
+        }
+        downloadImage(img.getImageUrl(),response);
+        return APIResponse.success("下载完成");
+    }
+
+    @Override
+    public APIResponse downloadImageByUrl(String url, HttpServletResponse response) throws Exception {
+        Image img = imageMapper.selectByImageUrl(url);
+        if(img == null) {
+            return APIResponse.error(ErrorCode.IMAGE_URL_ERROR);
+        }
+        downloadImage(url,response);
+        return APIResponse.success("下载完成");
     }
 
 }
