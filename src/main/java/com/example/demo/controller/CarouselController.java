@@ -2,11 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.pojo.Carousel;
 import com.example.demo.pojo.CarouselCreateDTO;
+import com.example.demo.pojo.CarouselDeleteDTO;
 import com.example.demo.service.CarouselService;
 import com.example.demo.utils.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/crs")
 public class CarouselController {
@@ -23,8 +25,8 @@ public class CarouselController {
     }
 
     @PostMapping("/delete")
-    public APIResponse crsDelete(@RequestParam("id") Integer id) {
-        return carouselService.crsDelete(id);
+    public APIResponse crsDelete(@RequestBody CarouselDeleteDTO carouselDeleteDTO) {
+        return carouselService.crsDelete(carouselDeleteDTO.getId());
     }
 
     @PostMapping("/update")

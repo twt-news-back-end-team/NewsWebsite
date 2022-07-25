@@ -8,13 +8,7 @@ import lombok.NonNull;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarouselCreateDTO {
+public class CarouselDeleteDTO {
     @NonNull
-    private Integer articleId;
-    @NonNull
-    private Integer imageId;
-    @NonNull
-    private String title;
-    @NonNull
-    private String summary;
+    private Integer id;
 }
