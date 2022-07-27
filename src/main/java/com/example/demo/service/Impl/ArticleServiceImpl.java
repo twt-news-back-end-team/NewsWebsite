@@ -29,7 +29,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     @Transactional
     public APIResponse articleCreate(ArticleCreateDTO articleCreateDTO) {
-        if (LengthCheck.check(articleCreateDTO.getTitle(), articleCreateDTO.getOrigin())) {
+        if (LengthCheck.check(articleCreateDTO.getTitle(), articleCreateDTO.getOrigin(),
+                articleCreateDTO.getContributorName(), articleCreateDTO.getReviewerName())) {
             return APIResponse.error(ErrorCode.STRING_LENGTH_ERROR);
         }
         if (LengthCheck.check(20000, articleCreateDTO.getText())) {
@@ -41,6 +42,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         article.setTitle(articleCreateDTO.getTitle());
         article.setText(articleCreateDTO.getText());
         article.setStatus(articleCreateDTO.getStatus());
+        article.setContributorName(articleCreateDTO.getContributorName());
+        article.setReviewerName(articleCreateDTO.getReviewerName());
         article.setReleaseTime(new Date());
 
         articleMapper.insert(article);
@@ -57,7 +60,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     @Transactional
     public APIResponse articleUpdate(Article article) {
-        if (LengthCheck.check(article.getTitle(), article.getOrigin())) {
+        if (LengthCheck.check(article.getTitle(), article.getOrigin(),
+                article.getContributorName(), article.getReviewerName())) {
             return APIResponse.error(ErrorCode.STRING_LENGTH_ERROR);
         }
         if (LengthCheck.check(20000, article.getText())) {

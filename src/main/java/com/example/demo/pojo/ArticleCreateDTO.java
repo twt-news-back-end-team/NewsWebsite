@@ -20,4 +20,8 @@ public class ArticleCreateDTO {
     private String origin;
     @NonNull
     private Integer status;
+    @NonNull
+    private String contributorName;
+    @NonNull
+    private String reviewerName;
 }
