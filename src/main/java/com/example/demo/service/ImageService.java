@@ -13,4 +13,5 @@ public interface ImageService extends IService<Image> {
     APIResponse getImageByImageUploaderId(HttpSession session);
     APIResponse downloadImageById(Integer id, HttpServletResponse response) throws Exception;
     APIResponse downloadImageByUrl(String url,HttpServletResponse response) throws Exception;
+    APIResponse deleteImageById(Integer id);
 }
