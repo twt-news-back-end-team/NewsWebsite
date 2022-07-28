@@ -28,8 +28,8 @@ public class ArticleController {
     }
 
     @PostMapping("/update")
-    public APIResponse articleUpdate(@RequestBody Article article) {
-        return articleService.articleUpdate(article);
+    public APIResponse articleUpdate(@RequestBody ArticleAndTagsDTO articleAndTagsDTO) {
+        return articleService.articleUpdate(articleAndTagsDTO);
     }
 
     @PostMapping("/update/status")
@@ -65,13 +65,13 @@ public class ArticleController {
     @PostMapping("/select/summary/ids")
     public APIResponse articleSelectSummaryByIds(
             @RequestBody ArticleSelectSummaryByIdsDTO articleSelectSummaryByIdsDTO) {
-        return articleService.articleSelectSummaryByIds(articleSelectSummaryByIdsDTO);
+        return articleService.articleSelectSummaryByIds(articleSelectSummaryByIdsDTO.getIdList());
     }
 
     @PostMapping("/select/summary/see/ids")
     public APIResponse articleSelectSummarySeeByIds(
             @RequestBody ArticleSelectSummaryByIdsDTO articleSelectSummaryByIdsDTO) {
-        return articleService.articleSelectSummarySeeByIds(articleSelectSummaryByIdsDTO);
+        return articleService.articleSelectSummarySeeByIds(articleSelectSummaryByIdsDTO.getIdList());
     }
 
 

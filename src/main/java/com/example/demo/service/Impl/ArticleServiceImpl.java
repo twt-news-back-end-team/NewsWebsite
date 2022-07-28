@@ -3,11 +3,10 @@ package com.example.demo.service.Impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.mapper.ArticleMapper;
-import com.example.demo.pojo.Article;
-import com.example.demo.pojo.ArticleCreateDTO;
-import com.example.demo.pojo.ArticleSelectSummaryByIdsDTO;
-import com.example.demo.pojo.ArticleUpdateStatusDTO;
+import com.example.demo.mapper.ArticleTagMapper;
+import com.example.demo.pojo.*;
 import com.example.demo.service.ArticleService;
+import com.example.demo.service.TagService;
 import com.example.demo.utils.APIResponse;
 import com.example.demo.utils.ErrorCode;
 import com.example.demo.utils.LengthCheck;
@@ -15,15 +14,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService {
     private final ArticleMapper articleMapper;
+    private final ArticleTagMapper articleTagMapper;
+    private final TagService tagService;
 
     @Autowired
-    public ArticleServiceImpl(ArticleMapper articleMapper) {
+    public ArticleServiceImpl(ArticleMapper articleMapper, ArticleTagMapper articleTagMapper, TagService tagService) {
         this.articleMapper = articleMapper;
+        this.articleTagMapper = articleTagMapper;
+        this.tagService = tagService;
     }
 
     @Override
@@ -47,7 +52,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         article.setReleaseTime(new Date());
 
         articleMapper.insert(article);
-        return APIResponse.success(article);
+        if (!articleCreateDTO.getTagNameList().isEmpty() && articleCreateDTO.getTagNameList() != null) {
+            tagService.addTagToArticle(articleCreateDTO.getTagNameList(), article.getId());
+        }
+        return APIResponse.success(new ArticleAndTagsDTO(article, articleCreateDTO.getTagNameList()));
     }
 
     @Override
@@ -59,20 +67,28 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     @Transactional
-    public APIResponse articleUpdate(Article article) {
-        if (LengthCheck.check(article.getTitle(), article.getOrigin(),
-                article.getContributorName(), article.getReviewerName())) {
+    public APIResponse articleUpdate(ArticleAndTagsDTO articleAndTagsDTO) {
+        if (LengthCheck.check(articleAndTagsDTO.getTitle(), articleAndTagsDTO.getOrigin(),
+                articleAndTagsDTO.getContributorName(), articleAndTagsDTO.getReviewerName())) {
             return APIResponse.error(ErrorCode.STRING_LENGTH_ERROR);
         }
-        if (LengthCheck.check(20000, article.getText())) {
+        if (LengthCheck.check(20000, articleAndTagsDTO.getText())) {
             return APIResponse.error(ErrorCode.STRING_LENGTH_ERROR);
         }
-        Article preArticle = articleMapper.selectById(article.getId());
-        if (!preArticle.getReleaseTime().equals(article.getReleaseTime())) {
+        Article preArticle = articleMapper.selectById(articleAndTagsDTO.getId());
+        if (!preArticle.getReleaseTime().equals(articleAndTagsDTO.getReleaseTime())) {
             return APIResponse.error(ErrorCode.ARTICLE_DATE_ERROR);
         }
 
-        articleMapper.updateById(article);
+        articleMapper.updateById(articleAndTagsDTO.toArticle());
+
+        QueryWrapper<ArticleTag> wrapper = new QueryWrapper<>();
+        wrapper.eq("article_id", articleAndTagsDTO.getId());
+        articleTagMapper.delete(wrapper);
+        if (!articleAndTagsDTO.getTagNameList().isEmpty() && articleAndTagsDTO.getTagNameList() != null) {
+            tagService.addTagToArticle(articleAndTagsDTO.getTagNameList(), articleAndTagsDTO.getId());
+        }
+
         return APIResponse.error(ErrorCode.OK);
     }
 
@@ -93,53 +109,72 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public APIResponse articleSelectById(Integer id) {
-        return APIResponse.success(articleMapper.selectById(id));
+        return APIResponse.success(
+                new ArticleAndTagsDTO(articleMapper.selectById(id), tagService.getArticleTags(id))
+        );
     }
 
     @Override
     public APIResponse articleSelectSummaryById(Integer id) {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "title", "origin", "release_time", "status").eq("id", id);
-        return APIResponse.success(articleMapper.selectOne(wrapper));
+        wrapper.
+                select("id", "title", "origin", "release_time", "status", "contributor_name", "reviewer_name")
+                .eq("id", id);
+        return APIResponse.success(
+                new ArticleAndTagsDTO(articleMapper.selectOne(wrapper), tagService.getArticleTags(id))
+        );
+    }
+
+    private APIResponse getArticleAndTagsFromWrapper(QueryWrapper<Article> wrapper) {
+        List<Article> articleList = articleMapper.selectList(wrapper);
+        List<ArticleAndTagsDTO> articleAndTagsDTOList = new ArrayList<>();
+        for (Article i : articleList) {
+            articleAndTagsDTOList.add(new ArticleAndTagsDTO(i, tagService.getArticleTags(i.getId())));
+        }
+        return APIResponse.success(articleAndTagsDTOList);
     }
 
     @Override
     public APIResponse articleSelectSummary() {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "title", "origin", "release_time", "status");
-        return APIResponse.success(articleMapper.selectList(wrapper));
+        wrapper.select("id", "title", "origin", "release_time", "status", "contributor_name", "reviewer_name");
+        return getArticleAndTagsFromWrapper(wrapper);
     }
 
     @Override
     public APIResponse articleSelectSummaryTop() {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "title", "origin", "release_time", "status").eq("status", 1);
-        return APIResponse.success(articleMapper.selectList(wrapper));
+        wrapper.
+                select("id", "title", "origin", "release_time", "status", "contributor_name", "reviewer_name")
+                .eq("status", 1);
+        return getArticleAndTagsFromWrapper(wrapper);
     }
 
     @Override
     public APIResponse articleSelectSummaryNor() {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "title", "origin", "release_time", "status").eq("status", 0);
-        return APIResponse.success(articleMapper.selectList(wrapper));
+        wrapper.
+                select("id", "title", "origin", "release_time", "status", "contributor_name", "reviewer_name")
+                .eq("status", 0);
+        return getArticleAndTagsFromWrapper(wrapper);
     }
 
     @Override
-    public APIResponse articleSelectSummaryByIds(ArticleSelectSummaryByIdsDTO articleSelectSummaryByIdsDTO) {
+    public APIResponse articleSelectSummaryByIds(List<Integer> idList) {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
         wrapper.
-                select("id", "title", "origin", "release_time", "status")
-                .in("id", articleSelectSummaryByIdsDTO.getIdList());
-        return APIResponse.success(articleMapper.selectList(wrapper));
+                select("id", "title", "origin", "release_time", "status", "contributor_name", "reviewer_name")
+                .in("id", idList);
+        return getArticleAndTagsFromWrapper(wrapper);
     }
 
     @Override
-    public APIResponse articleSelectSummarySeeByIds(ArticleSelectSummaryByIdsDTO articleSelectSummaryByIdsDTO) {
+    public APIResponse articleSelectSummarySeeByIds(List<Integer> idList) {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
         wrapper.
-                select("id", "title", "origin", "release_time", "status")
+                select("id", "title", "origin", "release_time", "status", "contributor_name", "reviewer_name")
                 .ne("status", 2)
-                .in("id", articleSelectSummaryByIdsDTO.getIdList());
-        return APIResponse.success(articleMapper.selectList(wrapper));
+                .in("id", idList);
+        return getArticleAndTagsFromWrapper(wrapper);
     }
 }

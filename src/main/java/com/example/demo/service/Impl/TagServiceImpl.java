@@ -65,6 +65,19 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
 
     @Override
     @Transactional
+    public List<String> getArticleTags(Integer articleId) {
+        QueryWrapper<ArticleTag> wrapper = new QueryWrapper<>();
+        wrapper.select("tag_id").eq("article_id", articleId);
+        List<ArticleTag> articleTagList = articleTagMapper.selectList(wrapper);
+        List<String> tagNameList = new ArrayList<>();
+        for (ArticleTag i : articleTagList) {
+            tagNameList.add(tagMapper.selectById(i.getTagId()).getName());
+        }
+        return tagNameList;
+    }
+
+    @Override
+    @Transactional
     public APIResponse addTagToArticle(List<String> tagNameList, Integer articleId) {
         //如果标签不存在则新建
         for (String name : tagNameList) {
