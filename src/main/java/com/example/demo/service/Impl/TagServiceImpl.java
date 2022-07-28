@@ -100,6 +100,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     }
 
     @Override
+    @Transactional
     public APIResponse searchArticleByTags(List<String> tagNames) {
         List<String> idsList = new ArrayList<>();
         List<ArticleTag> articleTags;
