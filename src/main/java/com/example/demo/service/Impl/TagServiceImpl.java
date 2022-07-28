@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -59,6 +60,19 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
             return APIResponse.error(ErrorCode.Tag_NOT_EXIST_ERROR);
         }
         return APIResponse.success(tag);
+    }
+
+    @Override
+    @Transactional
+    public List<String> getArticleTags(Integer articleId) {
+        QueryWrapper<ArticleTag> wrapper = new QueryWrapper<>();
+        wrapper.select("tag_id").eq("article_id", articleId);
+        List<ArticleTag> articleTagList = articleTagMapper.selectList(wrapper);
+        List<String> tagNameList = new ArrayList<>();
+        for (ArticleTag i : articleTagList) {
+            tagNameList.add(tagMapper.selectById(i.getTagId()).getName());
+        }
+        return tagNameList;
     }
 
     @Override

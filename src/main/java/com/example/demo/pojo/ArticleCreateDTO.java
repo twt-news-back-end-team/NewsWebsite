@@ -1,12 +1,11 @@
 package com.example.demo.pojo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -24,4 +23,5 @@ public class ArticleCreateDTO {
     private String contributorName;
     @NonNull
     private String reviewerName;
+    private List<String> tagNameList;
 }

@@ -1,18 +1,17 @@
 package com.example.demo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.demo.pojo.Article;
-import com.example.demo.pojo.ArticleCreateDTO;
-import com.example.demo.pojo.ArticleSelectSummaryByIdsDTO;
-import com.example.demo.pojo.ArticleUpdateStatusDTO;
+import com.example.demo.pojo.*;
 import com.example.demo.utils.APIResponse;
+
+import java.util.List;
 
 public interface ArticleService extends IService<Article> {
     APIResponse articleCreate(ArticleCreateDTO articleCreateDTO);
 
     APIResponse articleDelete(Integer id);
 
-    APIResponse articleUpdate(Article article);
+    APIResponse articleUpdate(ArticleAndTagsDTO articleAndTagsDTO);
 
     APIResponse articleUpdateStatus(ArticleUpdateStatusDTO articleUpdateStatusDTO);
 
@@ -26,7 +25,7 @@ public interface ArticleService extends IService<Article> {
 
     APIResponse articleSelectSummaryNor();
 
-    APIResponse articleSelectSummaryByIds(ArticleSelectSummaryByIdsDTO articleSelectSummaryByIdsDTO);
+    APIResponse articleSelectSummaryByIds(List<Integer> idList);
 
-    APIResponse articleSelectSummarySeeByIds(ArticleSelectSummaryByIdsDTO articleSelectSummaryByIdsDTO);
+    APIResponse articleSelectSummarySeeByIds(List<Integer> idList);
 }
