@@ -9,6 +9,7 @@ import com.example.demo.utils.ErrorCode;
 import com.example.demo.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,9 +24,10 @@ import java.util.Random;
 public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements ImageService {
     @Autowired
     private ImageMapper imageMapper;
-//    private final static String imgPath = "/root/img";
-    private final static String imgPath = "E:\\mp4";
+//    private final static String imgPath = "/root/img/";
+    private final static String imgPath = "E:\\mp4\\";
     @Override
+    @Transactional
     public APIResponse uploadImage(MultipartFile img, HttpSession session) {
         //获得文件名
 /*
@@ -37,7 +39,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         Random random = new Random();
         String imgName = img.getOriginalFilename();
         String suffixName = imgName.substring(imgName.lastIndexOf("."));
-        imgName = random.nextInt(1000) + suffixName;
+        imgName = random.nextInt(1000) +"$" + imgName.substring(0,imgName.lastIndexOf('.')) + suffixName;
         String path = imgPath + imgName;
         try {
             //获得哈希码
@@ -49,7 +51,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
             else {
                 img.transferTo(new File(path));
             }
-            this.save(new Image(null,path,null,hashcode));
+            imageMapper.insert(new Image(null,path,null,hashcode));
         } catch (IOException e) {
             return APIResponse.error(ErrorCode.MD5_ERROR);
         }
@@ -57,6 +59,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
     }
 
     @Override
+    @Transactional
     public APIResponse getImageByImageUploaderId(HttpSession session) {
         String userId = (String)session.getAttribute("userId");
         if(userId.isEmpty()) {
@@ -86,7 +89,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         OutputStream out = response.getOutputStream();
 
         byte[] buff =new byte[1024];
-        int index=0;
+        int index;
         //4、执行 写出操作
         while((index= input.read(buff))!= -1){
             out.write(buff, 0, index);
@@ -97,6 +100,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
     }
 
     @Override
+    @Transactional
     public APIResponse downloadImageById(Integer id, HttpServletResponse response)throws Exception {
         Image img = imageMapper.selectById(id);
         if(img == null) {
@@ -107,6 +111,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
     }
 
     @Override
+    @Transactional
     public APIResponse downloadImageByUrl(String url, HttpServletResponse response) throws Exception {
         Image img = imageMapper.selectByImageUrl(url);
         if(img == null) {
@@ -114,6 +119,24 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         }
         downloadImage(url,response);
         return APIResponse.success("下载完成");
+    }
+
+    @Override
+    @Transactional
+    public APIResponse deleteImageById(Integer id) {
+        Image img = imageMapper.selectById(id);
+        if(img == null) {
+            return APIResponse.error(ErrorCode.IMAGE_ID_ERROR);
+        }
+        imageMapper.deleteById(id);
+        List<Image> imageList = imageMapper.selectByHashcode(img.getHashcode());
+        if(imageList.isEmpty()) {
+            File file = new File(img.getImageUrl());
+            if(!file.delete()) {
+                return APIResponse.error(ErrorCode.IMAGE_DELETE_ERROR);
+            }
+        }
+        return  APIResponse.success("图片删除成功");
     }
 
 }

@@ -29,14 +29,18 @@ public class ImageController {
     }
     @GetMapping("{id}")
     public APIResponse getImageById(@PathVariable Integer id) {
-        return APIResponse.success(imageService.getById(id).getImageUrl());
+        return APIResponse.success(imageService.getById(id));
     }
     @GetMapping("/download/{id}")
     public APIResponse downloadImageById(@PathVariable Integer id, HttpServletResponse response) throws Exception {
         return imageService.downloadImageById(id,response);
     }
-    @GetMapping("/download/url/{url}")
-    public APIResponse downloadImageByUrl(@PathVariable String url,HttpServletResponse response) throws Exception {
+    @PostMapping("/download/url")
+    public APIResponse downloadImageByUrl(@RequestParam String url,HttpServletResponse response) throws Exception {
         return imageService.downloadImageByUrl(url,response);
+    }
+    @GetMapping("/del/{id}")
+    public APIResponse deleteImageById(@PathVariable Integer id) {
+        return imageService.deleteImageById(id);
     }
 }
