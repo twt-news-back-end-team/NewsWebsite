@@ -1,16 +1,14 @@
 package com.example.demo.pojo;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Image {
+public class CarouselDeleteDTO {
+    @NonNull
     private Integer id;
-    private String imageUrl;
-    private String imageUploaderId;
-    private String hashcode;
 }
