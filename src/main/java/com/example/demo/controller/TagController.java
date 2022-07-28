@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.example.demo.pojo.AddTagToArticleDTO;
+import com.example.demo.pojo.SearchArticleByTagsDTO;
 import com.example.demo.pojo.Tag;
 import com.example.demo.service.TagService;
 import com.example.demo.utils.APIResponse;
@@ -20,7 +22,6 @@ public class TagController {
         return tagService.saveTag(name);
     }
 
-    //未完成
     @GetMapping("/del/{id}")
     APIResponse deleteTag(@PathVariable Integer id) {
         return APIResponse.success(tagService.deleteTagById(id));
@@ -46,12 +47,16 @@ public class TagController {
         return tagService.updateTag(oldName,newName);
     }
     @PostMapping("/article")
-    APIResponse addTagToArticle(@RequestParam List<String> tagNames, @RequestParam Integer articleId) {
-        return tagService.addTagToArticle(tagNames,articleId);
+    APIResponse addTagToArticle(@RequestBody AddTagToArticleDTO addTagToArticleDTO) {
+        return tagService.addTagToArticle(addTagToArticleDTO.getTagNames(),addTagToArticleDTO.getArticleId());
     }
     @PostMapping("/article/del")
     APIResponse delTagFromArticle(@RequestParam String tagName,@RequestParam Integer articleId) {
         return tagService.deleteTagFromArticle(tagName,articleId);
+    }
+    @PostMapping("/article/search")
+    APIResponse searchArticleByTags(@RequestBody SearchArticleByTagsDTO sat) {
+        return tagService.searchArticleByTags(sat.getTagNames());
     }
 
 }

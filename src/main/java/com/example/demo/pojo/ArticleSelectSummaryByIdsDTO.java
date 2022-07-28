@@ -1,16 +1,14 @@
 package com.example.demo.pojo;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Image {
-    private Integer id;
-    private String imageUrl;
-    private Integer imageUploaderId;
-    private String hashcode;
+public class ArticleSelectSummaryByIdsDTO {
+    private List<Integer> idList;
 }
