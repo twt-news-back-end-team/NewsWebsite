@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,7 +37,8 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
     @Override
     @Transactional
     public APIResponse deleteTagById(Integer id) {
-        return null;
+        tagMapper.deleteById(id);
+        return APIResponse.success("删除成功");
     }
 
     @Override
@@ -68,6 +70,7 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         for (String name : tagNameList) {
             Tag tag = tagMapper.selectByName(name);
             if(tag==null) {
+                tag = new Tag();
                 tag.setName(name);
                 tag.setId(tagMapper.insert(tag));
             }
@@ -94,5 +97,41 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         ArticleTag articleTag = articleTagMapper.selectOne(qw);
         articleTagMapper.deleteById(articleTag.getId());
         return APIResponse.success("删除完成");
+    }
+
+    @Override
+    public APIResponse searchArticleByTags(List<String> tagNames) {
+        List<String> idsList = new ArrayList<>();
+        List<ArticleTag> articleTags;
+        List<Integer> articleIds = new ArrayList<>();
+        for (String tagName : tagNames) {
+            QueryWrapper<ArticleTag> qw = new QueryWrapper<>();
+            Tag tag = tagMapper.selectByName(tagName);
+            qw.eq("tag_id",tag.getId());
+            //只在限定数据内找
+            if(!idsList.isEmpty()) {
+                qw.in("id",idsList);
+            }
+            articleTags = articleTagMapper.selectList(qw);
+            idsList.clear();
+            if(articleTags.isEmpty()) {
+                return APIResponse.success(null);
+            }
+            //获得匹配的稿件id
+            articleIds.clear();
+            for (ArticleTag articleTag : articleTags) {
+                articleIds.add(articleTag.getArticleId());
+            }
+            //根据稿件id获得限定数据
+            for (Integer articleId : articleIds) {
+                QueryWrapper<ArticleTag> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("article_id",articleId);
+                articleTags = articleTagMapper.selectList(queryWrapper);
+                for (ArticleTag articleTag : articleTags) {
+                    idsList.add(Integer.toString(articleTag.getId()));
+                }
+            }
+        }
+        return APIResponse.success(articleIds);
     }
 }

@@ -13,4 +13,6 @@ public interface TagService extends IService<Tag> {
     APIResponse searchTagByName(String name);
     APIResponse addTagToArticle(List<String> tagNameList, Integer articleId);
     APIResponse deleteTagFromArticle(String tagName,Integer articleId);
+
+    APIResponse searchArticleByTags(List<String> tagNames);
 }
