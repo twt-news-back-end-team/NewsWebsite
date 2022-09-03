@@ -14,7 +14,7 @@ import javax.websocket.Session;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/img")
+@RequestMapping("/imgbed")
 public class ImageController {
 
     @Autowired

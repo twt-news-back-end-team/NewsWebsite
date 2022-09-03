@@ -5,9 +5,9 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      username: root
-      password: root
-      url: jdbc:mysql://8.130.96.252:3306/yr
+      username: com_twt_news_2022
+      password: IsD1DXeCgrPjOv7G
+      url: jdbc:mysql://59.67.37.34:8888/com_twt_news_2022
 server:
   port: 80
 

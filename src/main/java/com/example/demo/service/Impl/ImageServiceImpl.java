@@ -24,8 +24,8 @@ import java.util.Random;
 public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements ImageService {
     @Autowired
     private ImageMapper imageMapper;
-//    private final static String imgPath = "/root/img/";
-    private final static String imgPath = "E:\\mp4\\";
+    private final static String imgPath = "/root/img/";
+//    private final static String imgPath = "E:\\mp4\\";
     @Override
     @Transactional
     public APIResponse uploadImage(MultipartFile img, HttpSession session) {
@@ -36,14 +36,14 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
             return APIResponse.error(ErrorCode.LOGIN_ERROR);
         }
 */
-        Random random = new Random();
         String imgName = img.getOriginalFilename();
         String suffixName = imgName.substring(imgName.lastIndexOf("."));
-        imgName = random.nextInt(1000) +"$" + imgName.substring(0,imgName.lastIndexOf('.')) + suffixName;
-        String path = imgPath + imgName;
+        String path;
         try {
             //获得哈希码
             String hashcode = MD5Util.md5HashCode(img.getInputStream());
+            imgName = hashcode +"$" + imgName.substring(0,imgName.lastIndexOf('.')) + suffixName;
+            path = imgPath + imgName;
             List<Image> imageList = imageMapper.selectByHashcode(hashcode);
             if(imageList.size()!=0) {
                 path = imageList.get(0).getImageUrl();
