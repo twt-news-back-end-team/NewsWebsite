@@ -74,7 +74,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
     }
 
     private void downloadImage(String url,HttpServletResponse response) throws Exception {
-        String fileName = url.substring(url.lastIndexOf('\\'));
+        String fileName = url.substring(url.indexOf('$')+1);
         response.reset();
         response.setCharacterEncoding("UTF-8"); //字符编码
         response.setContentType("multipart/form-data"); //二进制传输数据
