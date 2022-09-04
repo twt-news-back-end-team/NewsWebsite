@@ -50,6 +50,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         article.setContributorName(articleCreateDTO.getContributorName());
         article.setReviewerName(articleCreateDTO.getReviewerName());
         article.setReleaseTime(new Date());
+        if (articleCreateDTO.getCoverImageId() != null) {
+            article.setCoverImageId(articleCreateDTO.getCoverImageId());
+        }
+        else {
+            article.setCoverImageId(0);
+        }
+        if (articleCreateDTO.getCoverImageId() != null) {
+            article.setBannerImageId(articleCreateDTO.getBannerImageId());
+        }
+        else {
+            article.setBannerImageId(0);
+        }
+        article.setCategoryId(articleCreateDTO.getCategoryId());
+        article.setViewsNumber(0);
+
 
         articleMapper.insert(article);
         if (!articleCreateDTO.getTagNameList().isEmpty() && articleCreateDTO.getTagNameList() != null) {
@@ -109,16 +124,19 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public APIResponse articleSelectById(Integer id) {
+        Article article = articleMapper.selectById(id);
+        article.setViewsNumber(article.getViewsNumber() + 1);
+        articleMapper.updateById(article);
         return APIResponse.success(
-                new ArticleAndTagsDTO(articleMapper.selectById(id), tagService.getArticleTags(id))
+                new ArticleAndTagsDTO(article, tagService.getArticleTags(id))
         );
     }
 
     @Override
     public APIResponse articleSelectSummaryById(Integer id) {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
-        wrapper.
-                select("id", "title", "origin", "release_time", "status", "contributor_name", "reviewer_name")
+        wrapper.select("id", "title", "origin", "release_time", "status", "contributor_name",
+                        "reviewer_name", "cover_image_id", "category_id", "views_number")
                 .eq("id", id);
         return APIResponse.success(
                 new ArticleAndTagsDTO(articleMapper.selectOne(wrapper), tagService.getArticleTags(id))
@@ -137,7 +155,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public APIResponse articleSelectSummary() {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
-        wrapper.select("id", "title", "origin", "release_time", "status", "contributor_name", "reviewer_name");
+        wrapper.select("id", "title", "origin", "release_time", "status", "contributor_name",
+                "reviewer_name", "cover_image_id", "category_id", "views_number");
         return getArticleAndTagsFromWrapper(wrapper);
     }
 
@@ -145,7 +164,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public APIResponse articleSelectSummaryTop() {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
         wrapper.
-                select("id", "title", "origin", "release_time", "status", "contributor_name", "reviewer_name")
+                select("id", "title", "origin", "release_time", "status", "contributor_name",
+                        "reviewer_name", "cover_image_id", "category_id", "views_number")
                 .eq("status", 1);
         return getArticleAndTagsFromWrapper(wrapper);
     }
@@ -154,7 +174,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public APIResponse articleSelectSummaryNor() {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
         wrapper.
-                select("id", "title", "origin", "release_time", "status", "contributor_name", "reviewer_name")
+                select("id", "title", "origin", "release_time", "status", "contributor_name",
+                        "reviewer_name", "cover_image_id", "category_id", "views_number")
                 .eq("status", 0);
         return getArticleAndTagsFromWrapper(wrapper);
     }
@@ -163,7 +184,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public APIResponse articleSelectSummaryByIds(List<Integer> idList) {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
         wrapper.
-                select("id", "title", "origin", "release_time", "status", "contributor_name", "reviewer_name")
+                select("id", "title", "origin", "release_time", "status", "contributor_name",
+                        "reviewer_name", "cover_image_id", "category_id", "views_number")
                 .in("id", idList);
         return getArticleAndTagsFromWrapper(wrapper);
     }
@@ -172,7 +194,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public APIResponse articleSelectSummarySeeByIds(List<Integer> idList) {
         QueryWrapper<Article> wrapper = new QueryWrapper<>();
         wrapper.
-                select("id", "title", "origin", "release_time", "status", "contributor_name", "reviewer_name")
+                select("id", "title", "origin", "release_time", "status", "contributor_name",
+                        "reviewer_name", "cover_image_id", "category_id", "views_number")
                 .ne("status", 2)
                 .in("id", idList);
         return getArticleAndTagsFromWrapper(wrapper);

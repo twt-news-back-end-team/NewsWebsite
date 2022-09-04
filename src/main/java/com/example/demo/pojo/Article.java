@@ -21,4 +21,8 @@ public class Article {
     private String contributorName;
     private String reviewerName;
     private Integer contributorId;
+    private Integer coverImageId;
+    private Integer bannerImageId;
+    private Integer categoryId;
+    private Integer viewsNumber;
 }
