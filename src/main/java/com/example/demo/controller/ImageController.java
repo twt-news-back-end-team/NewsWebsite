@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
 import java.io.IOException;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/imgbed")
 public class ImageController {
