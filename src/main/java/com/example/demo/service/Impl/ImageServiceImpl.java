@@ -40,6 +40,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
         String imgName = img.getOriginalFilename();
         String suffixName = imgName.substring(imgName.lastIndexOf("."));
         String path;
+        Image image = new Image();
         try {
             //获得哈希码
             String hashcode = MD5Util.md5HashCode(img.getInputStream());
@@ -52,11 +53,13 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
             else {
                 img.transferTo(new File(path));
             }
-            imageMapper.insert(new Image(null,path,null,hashcode));
+            image.setImageUrl(path);
+            image.setHashcode(hashcode);
+            imageMapper.insert(image);
         } catch (IOException e) {
             return APIResponse.error(ErrorCode.MD5_ERROR);
         }
-        return APIResponse.success(path);
+        return APIResponse.success(image.getId());
     }
 
     @Override
