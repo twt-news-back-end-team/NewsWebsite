@@ -14,5 +14,5 @@ public interface ImageMapper extends BaseMapper<Image> {
     @Select("select * from image where image_uploader_id =#{imageUploaderId}")
     List<Image> selectByImageUploaderId(String imageUploaderId);
     @Select("select * from image where image_url=#{imageUrl}")
-    Image selectByImageUrl(String imageUrl);
+    List<Image> selectByImageUrl(String imageUrl);
 }

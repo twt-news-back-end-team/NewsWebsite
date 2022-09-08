@@ -37,15 +37,16 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
             return APIResponse.error(ErrorCode.LOGIN_ERROR);
         }
 */
-        String imgName = img.getOriginalFilename();
-        String suffixName = imgName.substring(imgName.lastIndexOf("."));
+//        String imgName = img.getOriginalFilename();
+//        String suffixName = imgName.substring(imgName.lastIndexOf("."));
         String path;
         Image image = new Image();
         try {
             //获得哈希码
             String hashcode = MD5Util.md5HashCode(img.getInputStream());
-            imgName = hashcode +"$" + imgName.substring(0,imgName.lastIndexOf('.')) + suffixName;
-            path = imgPath + imgName;
+//            imgName = hashcode +"$" + imgName.substring(0,imgName.lastIndexOf('.')) + suffixName;
+//            path = imgPath + imgName;
+            path = imgPath + hashcode;
             List<Image> imageList = imageMapper.selectByHashcode(hashcode);
             if(imageList.size()!=0) {
                 path = imageList.get(0).getImageUrl();
@@ -78,11 +79,12 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
     }
 
     private void downloadImage(String url,HttpServletResponse response) throws Exception {
-        String fileName = url.substring(url.indexOf('$')+1);
-//        String fileName = url;
+//        String fileName = url.substring(url.indexOf('$')+1);
+        String fileName = url.substring(url.lastIndexOf('/'));
         response.reset();
         response.setCharacterEncoding("UTF-8"); //字符编码
-        response.setContentType("multipart/form-data"); //二进制传输数据
+        response.setContentType("image/jepg"); //二进制传输数据
+//        response.setContentType("multipart/form-data"); //二进制传输数据
         //设置响应头
         response.setHeader("Content-Disposition",
                 "attachment;fileName="+ URLEncoder.encode(fileName, "UTF-8"));
@@ -118,8 +120,8 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
     @Override
     @Transactional
     public APIResponse downloadImageByUrl(String url, HttpServletResponse response) throws Exception {
-        Image img = imageMapper.selectByImageUrl(url);
-        if(img == null) {
+        List<Image> imgList = imageMapper.selectByImageUrl(url);
+        if(imgList == null) {
             return APIResponse.error(ErrorCode.IMAGE_URL_ERROR);
         }
         downloadImage(url,response);

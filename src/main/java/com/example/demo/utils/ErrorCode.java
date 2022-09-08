@@ -18,6 +18,7 @@ public enum ErrorCode {
     IMAGE_URL_ERROR(1004,"Image Url Error"),
     IMAGE_ID_ERROR(1005,"Image Id Error"),
     IMAGE_DELETE_ERROR(1006,"Image Delete Error"),
+    IMAGE_IO_ERROR(1007,"Image IO Error"),
     STRING_LENGTH_ERROR(2001, "String Length Error"),
     CAROUSEL_DATE_ERROR(2002, "Carousel Create Date Error"),
     STATUS_ERROR(2003, "Status Not in True Range"),
