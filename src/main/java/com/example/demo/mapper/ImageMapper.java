@@ -9,10 +9,10 @@ import java.util.List;
 
 @Mapper
 public interface ImageMapper extends BaseMapper<Image> {
-    @Select("select * from yr.image where hashcode=#{hashcode}")
+    @Select("select * from image where hashcode=#{hashcode}")
     List<Image> selectByHashcode(String hashcode);
-    @Select("select * from yr.image where image_uploader_id =#{imageUploaderId}")
+    @Select("select * from image where image_uploader_id =#{imageUploaderId}")
     List<Image> selectByImageUploaderId(String imageUploaderId);
-    @Select("select * from yr.image where image_url=#{imageUrl}")
+    @Select("select * from image where image_url=#{imageUrl}")
     Image selectByImageUrl(String imageUrl);
 }
