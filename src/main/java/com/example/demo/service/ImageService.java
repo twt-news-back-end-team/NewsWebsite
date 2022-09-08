@@ -12,7 +12,7 @@ import java.io.IOException;
 public interface ImageService extends IService<Image> {
     APIResponse uploadImage(MultipartFile img, HttpSession session);
     APIResponse getImageByImageUploaderId(HttpSession session);
-    APIResponse downloadImageById(Integer id, HttpServletResponse response) throws Exception;
-    APIResponse downloadImageByUrl(String url,HttpServletResponse response) throws Exception;
+    void downloadImageById(Integer id, HttpServletResponse response) throws Exception;
+    void downloadImageByUrl(String url,HttpServletResponse response) throws Exception;
     APIResponse deleteImageById(Integer id);
 }

@@ -34,12 +34,12 @@ public class ImageController {
         return APIResponse.success(imageService.getById(id));
     }
     @GetMapping("/download/{id}")
-    public APIResponse downloadImageById(@PathVariable Integer id, HttpServletResponse response) throws Exception {
-        return imageService.downloadImageById(id,response);
+    public void downloadImageById(@PathVariable Integer id, HttpServletResponse response) throws Exception {
+        imageService.downloadImageById(id,response);
     }
     @PostMapping("/download/url")
-    public APIResponse downloadImageByUrl(@RequestParam String url,HttpServletResponse response) throws Exception {
-        return imageService.downloadImageByUrl(url,response);
+    public void downloadImageByUrl(@RequestParam String url,HttpServletResponse response) throws Exception {
+        imageService.downloadImageByUrl(url,response);
     }
     @GetMapping("/del/{id}")
     public APIResponse deleteImageById(@PathVariable Integer id) {

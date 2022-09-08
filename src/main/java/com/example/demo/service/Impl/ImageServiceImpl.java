@@ -79,7 +79,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
 
     private void downloadImage(String url,HttpServletResponse response) throws Exception {
 //        String fileName = url.substring(url.indexOf('$')+1);
-        String fileName = url.substring(url.lastIndexOf('/'));
+        String fileName = url.substring(url.lastIndexOf('/')+1);
         response.reset();
         response.setCharacterEncoding("UTF-8"); //字符编码
         response.setContentType("image/jepg"); //二进制传输数据
@@ -107,24 +107,22 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
 
     @Override
     @Transactional
-    public APIResponse downloadImageById(Integer id, HttpServletResponse response)throws Exception {
+    public void downloadImageById(Integer id, HttpServletResponse response)throws Exception {
         Image img = imageMapper.selectById(id);
         if(img == null) {
-            return APIResponse.error(ErrorCode.IMAGE_ID_ERROR);
+            return;
         }
         downloadImage(img.getImageUrl(),response);
-        return APIResponse.success("下载完成");
     }
 
     @Override
     @Transactional
-    public APIResponse downloadImageByUrl(String url, HttpServletResponse response) throws Exception {
+    public void downloadImageByUrl(String url, HttpServletResponse response) throws Exception {
         List<Image> imgList = imageMapper.selectByImageUrl(url);
         if(imgList == null) {
-            return APIResponse.error(ErrorCode.IMAGE_URL_ERROR);
+            return;
         }
         downloadImage(url,response);
-        return APIResponse.success("下载完成");
     }
 
     @Override
