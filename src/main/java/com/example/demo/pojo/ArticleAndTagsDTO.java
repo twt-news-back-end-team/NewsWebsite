@@ -22,6 +22,10 @@ public class ArticleAndTagsDTO {
     private String contributorName;
     private String reviewerName;
     private Integer contributorId;
+    private Integer coverImageId;
+    private Integer bannerImageId;
+    private Integer categoryId;
+    private Integer viewsNumber;
     private List<String> tagNameList;
 
     public ArticleAndTagsDTO(Article article, List<String> tagNameList) {
@@ -34,10 +38,15 @@ public class ArticleAndTagsDTO {
         this.contributorName = article.getContributorName();
         this.reviewerName = article.getReviewerName();
         this.contributorId = article.getContributorId();
+        this.coverImageId = article.getCoverImageId();
+        this.bannerImageId = article.getBannerImageId();
+        this.categoryId = article.getCategoryId();
+        this.viewsNumber = article.getViewsNumber();
         this.tagNameList = tagNameList;
     }
 
     public Article toArticle() {
-        return new Article(id, text, title, origin, releaseTime, status, contributorName, reviewerName, contributorId);
+        return new Article(id, text, title, origin, releaseTime, status, contributorName, reviewerName,
+                contributorId, coverImageId, bannerImageId, categoryId, viewsNumber);
     }
 }
