@@ -74,5 +74,10 @@ public class ArticleController {
         return articleService.articleSelectSummarySeeByIds(articleSelectSummaryByIdsDTO.getIdList());
     }
 
+    @GetMapping("/select/title/{keyword}")
+    public APIResponse articleSelectTitle(@PathVariable("keyword") String keyword) {
+        return articleService.articleSelectTitle(keyword);
+    }
+
 
 }

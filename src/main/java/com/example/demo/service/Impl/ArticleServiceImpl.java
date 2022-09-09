@@ -200,4 +200,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
                 .in("id", idList);
         return getArticleAndTagsFromWrapper(wrapper);
     }
+
+    @Override
+    public APIResponse articleSelectTitle(String keyword) {
+        QueryWrapper<Article> wrapper = new QueryWrapper<>();
+        wrapper.select("id", "title").like("title", keyword);
+        return APIResponse.success(articleMapper.selectList(wrapper));
+    }
 }

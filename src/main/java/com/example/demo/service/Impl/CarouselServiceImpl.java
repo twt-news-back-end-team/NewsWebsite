@@ -54,10 +54,10 @@ public class CarouselServiceImpl extends ServiceImpl<CarouselMapper, Carousel> i
         if(LengthCheck.check(carousel.getSummary()) || LengthCheck.check(carousel.getTitle())) {
             return APIResponse.error(ErrorCode.STRING_LENGTH_ERROR);
         }
-        Carousel preCarousel = carouselMapper.selectById(carousel.getId());
-        if (!preCarousel.getCreateDate().equals(carousel.getCreateDate())) {
-            return APIResponse.error(ErrorCode.CAROUSEL_DATE_ERROR);
-        }
+//        Carousel preCarousel = carouselMapper.selectById(carousel.getId());
+//        if (!preCarousel.getCreateDate().equals(carousel.getCreateDate())) {
+//            return APIResponse.error(ErrorCode.CAROUSEL_DATE_ERROR);
+//        }
 
         carouselMapper.updateById(carousel);
         return APIResponse.error(ErrorCode.OK);

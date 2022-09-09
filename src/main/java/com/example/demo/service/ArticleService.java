@@ -28,4 +28,6 @@ public interface ArticleService extends IService<Article> {
     APIResponse articleSelectSummaryByIds(List<Integer> idList);
 
     APIResponse articleSelectSummarySeeByIds(List<Integer> idList);
+
+    APIResponse articleSelectTitle(String keyword);
 }
