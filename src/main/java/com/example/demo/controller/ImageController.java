@@ -22,8 +22,9 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
     @PostMapping("/upload")
-    public APIResponse imgUpload(@RequestParam("img")MultipartFile img, HttpSession session) {
-        return imageService.uploadImage(img,session);
+    public APIResponse imgUpload(@RequestParam("img")MultipartFile img) {
+
+        return imageService.uploadImage(img);
     }
     @GetMapping
     public APIResponse getImageByImageUploaderId(HttpSession session) {

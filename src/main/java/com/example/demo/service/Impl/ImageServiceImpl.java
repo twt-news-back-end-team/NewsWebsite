@@ -29,7 +29,7 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
 //    private final static String imgPath = "E:\\mp4\\";
     @Override
     @Transactional
-    public APIResponse uploadImage(MultipartFile img, HttpSession session) {
+    public APIResponse uploadImage(MultipartFile img) {
         //获得文件名
 /*
         String userId =(String) session.getAttribute("userId");
