@@ -37,28 +37,36 @@ public class ImageServiceImpl extends ServiceImpl<ImageMapper, Image> implements
             return APIResponse.error(ErrorCode.LOGIN_ERROR);
         }
 */
+        System.out.println(2);
         String imgName = img.getOriginalFilename();
         String suffixName = imgName.substring(imgName.lastIndexOf("."));
         String path;
         Image image = new Image();
+        System.out.println(3);
         try {
             //获得哈希码
+            System.out.println(4);
             String hashcode = MD5Util.md5HashCode(img.getInputStream());
             imgName = hashcode +  suffixName;
             path = imgPath + imgName;
+            System.out.println(5);
             List<Image> imageList = imageMapper.selectByHashcode(hashcode);
+            System.out.println(6);
             if(imageList.size()!=0) {
                 path = imageList.get(0).getImageUrl();
             }
             else {
                 img.transferTo(new File(path));
             }
+            System.out.println(7);
             image.setImageUrl(path);
             image.setHashcode(hashcode);
             imageMapper.insert(image);
+            System.out.println(8);
         } catch (IOException e) {
             return APIResponse.error(ErrorCode.MD5_ERROR);
         }
+        System.out.println(9);
         return APIResponse.success(image.getId());
     }
 

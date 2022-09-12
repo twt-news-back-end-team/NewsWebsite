@@ -50,18 +50,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         article.setContributorName(articleCreateDTO.getContributorName());
         article.setReviewerName(articleCreateDTO.getReviewerName());
         article.setReleaseTime(new Date());
-        if (articleCreateDTO.getCoverImageId() != null) {
-            article.setCoverImageId(articleCreateDTO.getCoverImageId());
-        }
-        else {
-            article.setCoverImageId(0);
-        }
-        if (articleCreateDTO.getCoverImageId() != null) {
-            article.setBannerImageId(articleCreateDTO.getBannerImageId());
-        }
-        else {
-            article.setBannerImageId(0);
-        }
+        article.setCoverImageId(articleCreateDTO.getCoverImageId());
+        article.setBannerImageId(articleCreateDTO.getBannerImageId());
         article.setCategoryId(articleCreateDTO.getCategoryId());
         article.setViewsNumber(0);
 

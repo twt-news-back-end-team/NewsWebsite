@@ -24,7 +24,10 @@ public class ArticleCreateDTO {
     @NonNull
     private String reviewerName;
     private List<String> tagNameList;
+    @NonNull
     private Integer coverImageId;
+    @NonNull
     private Integer bannerImageId;
+    @NonNull
     private Integer categoryId;
 }
