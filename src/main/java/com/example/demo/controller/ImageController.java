@@ -23,7 +23,6 @@ public class ImageController {
     private ImageService imageService;
     @PostMapping("/upload")
     public APIResponse imgUpload(@RequestParam("img")MultipartFile img) {
-        System.out.println(1);
         return imageService.uploadImage(img);
     }
     @GetMapping
