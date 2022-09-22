@@ -7,6 +7,6 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface TagMapper extends BaseMapper<Tag> {
-    @Select("select * from yr.tag where name=#{name}")
+    @Select("select * from tag where name=#{name}")
     Tag selectByName(String name);
 }
