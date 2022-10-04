@@ -1,0 +1,1 @@
+import{_ as s,o as c,c as _,p as a,e as t,a as o}from "./index.eccd65ea.js";const d={},p= e=>(a("data-v-1d471fbe"),e=e(),t(),e),r={class:"access"},n=p(()=>o("p",{class:"title"},"\u6743\u9650\u9875\u9762",-1)),i=[n];function l(e, f){return c(),_("div",r,i)}var v=s(d,[["render",l],["__scopeId","data-v-1d471fbe"]]);export{v as default};

@@ -5,16 +5,19 @@ spring:
   datasource:
     druid:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      username: root
-      password: "!@#Root13579"
-      url: jdbc:mysql://8.130.96.252:3306/yr
-#      username: com_twt_news_2022
-#      password: IsD1DXeCgrPjOv7G
-#      url: jdbc:mysql://59.67.37.34:8888/com_twt_news_2022
+#      username: root
+#      password: "!@#Root13579"
+#      url: jdbc:mysql://8.130.96.252:3306/yr
+      username: com_twt_news_2022
+      password: IsD1DXeCgrPjOv7G
+      url: jdbc:mysql://59.67.37.34:8888/com_twt_news_2022
   servlet:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
+  web:
+    resources:
+      static-locations: classpath:/static/,classpath:/bg
 
 server:
   port: 80
