@@ -2,15 +2,6 @@
 spring:
   application:
     name: news
-  datasource:
-    druid:
-      driver-class-name: com.mysql.cj.jdbc.Driver
-#      username: root
-#      password: "!@#Root13579"
-#      url: jdbc:mysql://8.130.96.252:3306/yr
-      username: com_twt_news_2022
-      password: IsD1DXeCgrPjOv7G
-      url: jdbc:mysql://59.67.37.34:8888/com_twt_news_2022
   servlet:
     multipart:
       max-file-size: 20MB
@@ -18,11 +9,13 @@ spring:
   web:
     resources:
       static-locations: classpath:/static/,classpath:/bg
-
-server:
-  port: 80
-
+  profiles:
+    active: pro
 mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+
+server:
+  port: 80
+

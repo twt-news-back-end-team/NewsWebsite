@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: "!@#Root13579"
+      url: jdbc:mysql://8.130.96.252:3306/yr

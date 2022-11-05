@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: com_twt_news_2022
+      password: IsD1DXeCgrPjOv7G
+      url: jdbc:mysql://59.67.37.34:8888/com_twt_news_2022
