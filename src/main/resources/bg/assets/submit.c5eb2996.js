@@ -1,0 +1,1 @@
+import{a2 as s,o as t,e as _,a3 as a,a4 as o,m as c}from"./index.01ea1bf3.js";const d={},r=e=>(a("data-v-18014f98"),e=e(),o(),e),p={class:"submit"},i=r(()=>c("p",{class:"title"},"\u6295\u7A3F\u9875\u9762",-1)),n=[i];function u(e,l){return t(),_("div",p,n)}var m=s(d,[["render",u],["__scopeId","data-v-18014f98"]]);export{m as default};

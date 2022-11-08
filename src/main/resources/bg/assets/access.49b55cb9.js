@@ -1,0 +1,1 @@
+import{a2 as s,o as c,e as a,a3 as t,a4 as _,m as o}from"./index.01ea1bf3.js";const d={},r=e=>(t("data-v-1d471fbe"),e=e(),_(),e),p={class:"access"},n=r(()=>o("p",{class:"title"},"\u6743\u9650\u9875\u9762",-1)),i=[n];function l(e,f){return c(),a("div",p,i)}var v=s(d,[["render",l],["__scopeId","data-v-1d471fbe"]]);export{v as default};
